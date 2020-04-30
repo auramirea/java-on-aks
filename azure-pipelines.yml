@@ -20,6 +20,7 @@ variables:
   vmImageName: 'ubuntu-latest'
   IMAGE_TAG: '$(Build.BuildId)'
   azureSubscription: 'devopsaura'
+  KEYVAULT_NAME: 'devopsaurakv'
   
 
 stages:
@@ -35,7 +36,7 @@ stages:
       displayName: Fetch secrets from Azure Key vault
       inputs:
         azureSubscription: $(azureSubscription)
-        KeyVaultName: 'piggymetrics'
+        KeyVaultName: $(KEYVAULT_NAME)
         SecretsFilter: '*'
 
     - task: Bash@3
@@ -101,7 +102,7 @@ stages:
             displayName: Fetch secrets from Azure Key vault
             inputs:
               azureSubscription: $(azureSubscription)
-              KeyVaultName: 'piggymetrics'
+              KeyVaultName: $(KEYVAULT_NAME)
               SecretsFilter: '*'
           
           - task: replacetokens@3
