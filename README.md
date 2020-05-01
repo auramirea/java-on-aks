@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/aumirea/90d77d9d-8df3-4bca-8e40-c5997db52541/7d47328a-c9f3-46fe-9d4a-fe429c78ae0d/_apis/work/boardbadge/65c5abc7-9fc1-4a89-a309-7ce269f3dc3a)](https://dev.azure.com/aumirea/90d77d9d-8df3-4bca-8e40-c5997db52541/_boards/board/t/7d47328a-c9f3-46fe-9d4a-fe429c78ae0d/Microsoft.RequirementCategory)
 ---
 page_type: sample
 languages:
