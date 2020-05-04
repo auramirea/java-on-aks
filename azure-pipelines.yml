@@ -32,6 +32,11 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'SonarCloud'
+        organization: 'auramirea'
+        scannerMode: 'Other'
     - task: AzureKeyVault@1
       displayName: Fetch secrets from Azure Key vault
       inputs:
@@ -80,7 +85,7 @@ stages:
               -Djib.container.environment=NOTIFICATION_SERVICE_PASSWORD=$(NOTIFICATION-SERVICE-PASSWORD)
           
           echo 'Build complete'
-
+    - task: SonarCloudAnalyze@1
     - publish: kubernetes
       artifact: kubernetes
 
