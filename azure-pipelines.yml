@@ -37,6 +37,18 @@ stages:
         SonarCloud: 'SonarCloud'
         organization: 'auramirea'
         scannerMode: 'Other'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'mvn verify sonar:sonar'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: true
+        sqMavenPluginVersionChoice: 'latest'
     - task: AzureKeyVault@1
       displayName: Fetch secrets from Azure Key vault
       inputs:
@@ -85,7 +97,7 @@ stages:
               -Djib.container.environment=NOTIFICATION_SERVICE_PASSWORD=$(NOTIFICATION-SERVICE-PASSWORD)
           
           echo 'Build complete'
-    - task: SonarCloudAnalyze@1
+
     - publish: kubernetes
       artifact: kubernetes
 
