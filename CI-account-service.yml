@@ -24,6 +24,7 @@ steps:
     scannerMode: 'Other'
     extraProperties: |
       sonar.projectKey=account-service
+      sonar.sources=account-service/src/**
 
 - task: Maven@3
   inputs:
