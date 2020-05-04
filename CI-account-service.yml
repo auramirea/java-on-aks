@@ -24,14 +24,14 @@ steps:
     scannerMode: 'Other'
     extraProperties: |
       sonar.projectKey=account-service
-      sonar.sources=account-service/src/**
+      sonar.sources=account-service/src/
 
 - task: Maven@3
   inputs:
     mavenPomFile: 'account-service/pom.xml'
     goals: 'verify sonar:sonar'
     publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    testResultsFiles: 'account-service/**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
     mavenVersionOption: 'Default'
     mavenAuthenticateFeed: false
