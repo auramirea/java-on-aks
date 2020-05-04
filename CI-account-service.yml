@@ -23,7 +23,7 @@ steps:
     organization: 'auramirea'
     scannerMode: 'Other'
     extraProperties: |
-      sonar.projectKey=account-service
+      sonar.projectKey=auramirea_java-on-aks
 
 - task: Maven@3
   inputs:
