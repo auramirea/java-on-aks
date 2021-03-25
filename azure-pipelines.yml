@@ -94,7 +94,7 @@ stages:
     displayName: Deploy to AKS
     pool:
       vmImage: $(vmImageName)
-    environment: 'Piggymetrics.default'
+    environment: 'Piggymetrics'
     strategy:
       runOnce:
         deploy:
