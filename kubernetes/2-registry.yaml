@@ -29,6 +29,9 @@ metadata:
     app: registry
   name: registry
 spec:
+  selector:
+    matchLabels:
+      app: registry
   replicas: 1
   strategy:
     type: RollingUpdate
