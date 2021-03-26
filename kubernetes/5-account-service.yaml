@@ -28,6 +28,9 @@ metadata:
     app: account-service
   name: account-service
 spec:
+  selector:
+    matchLabels:
+      app: account-service
   replicas: 1
   strategy:
     type: RollingUpdate
