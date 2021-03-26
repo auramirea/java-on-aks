@@ -27,6 +27,9 @@ metadata:
     tier: frontend
     app: gateway
 spec:
+  selector:
+    matchLabels:
+      app: gateway
   replicas: 1
   strategy:
     type: RollingUpdate
