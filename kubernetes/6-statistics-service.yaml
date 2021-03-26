@@ -28,6 +28,9 @@ metadata:
     app: statistics-service
   name: statistics-service
 spec:
+  selector:
+    matchLabels:
+      app: statistics-service
   replicas: 1
   strategy:
     type: RollingUpdate
