@@ -29,6 +29,9 @@ metadata:
     app: config
   name: config
 spec:
+  selector:
+    matchLabels:
+      app: config
   replicas: 1
   strategy:
     type: RollingUpdate
