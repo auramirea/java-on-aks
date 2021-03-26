@@ -85,16 +85,65 @@ stages:
     - publish: kubernetes
       artifact: kubernetes
 
-- stage: Deploy
-  displayName: Deploy stage
+- stage: Deploy_dev
+  displayName: Deploy to development
   dependsOn: Build
 
   jobs:
   - deployment: Deploy
-    displayName: Deploy to AKS
+    displayName: Deploy to development
     pool:
       vmImage: $(vmImageName)
     environment: 'Piggymetrics.default'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureKeyVault@1
+            displayName: Fetch secrets from Azure Key vault
+            inputs:
+              azureSubscription: $(azureSubscription)
+              KeyVaultName: $(KEYVAULT_NAME)
+              SecretsFilter: '*'
+          
+          - task: replacetokens@3
+            displayName: Replace CONTAINER_REGISTRY & IMAGE_TAG in all the manifest files
+            inputs:
+              targetFiles: '$(Pipeline.Workspace)/kubernetes/*.yaml'
+              tokenPrefix: '${'
+              tokenSuffix: '}'
+
+          - task: KubernetesManifest@0
+            displayName: Create generic secrets to be available on pods
+            inputs:
+              action: 'createSecret'
+              secretType: 'generic'
+              secretName: 'piggymetrics'
+              secretArguments: '--from-literal=config_service_password=$(CONFIG-SERVICE-PASSWORD) --from-literal=notification_service_password=$(NOTIFICATION-SERVICE-PASSWORD) --from-literal=statistics_service_password=$(STATISTICS-SERVICE-PASSWORD) --from-literal=account_service_password=$(ACCOUNT-SERVICE-PASSWORD) --from-literal=rabbitmq_password=$(RABBITMQ-PASSWORD) --from-literal=mongodb_uri=$(MONGODB-URI)  --from-literal=mongodb_database=$(MONGODB-DATABASE) --from-literal=rabbitmq_username=$(RABBITMQ-USERNAME) --from-literal=rabbitmq_host=$(RABBITMQ-HOST) --from-literal=rabbitmq_port=$(RABBITMQ-PORT)  --from-literal=notification_email_user=$(SMTP-USER) --from-literal=notification_email_pass=$(SMTP-PASSWORD) --from-literal=notification_email_host=$(NOTIFICATION-EMAIL-HOST) --from-literal=notification_email_port=$(NOTIFICATION-EMAIL-PORT)'
+
+
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              manifests: |
+                $(Pipeline.Workspace)/kubernetes/1-config.yaml
+                $(Pipeline.Workspace)/kubernetes/2-registry.yaml
+                $(Pipeline.Workspace)/kubernetes/3-gateway.yaml
+                $(Pipeline.Workspace)/kubernetes/4-auth-service.yaml
+                $(Pipeline.Workspace)/kubernetes/5-account-service.yaml
+                $(Pipeline.Workspace)/kubernetes/6-statistics-service.yaml
+                $(Pipeline.Workspace)/kubernetes/7-notification-service.yaml
+
+- stage: Deploy_prod
+  displayName: Deploy to production
+  dependsOn: Deploy_dev
+  jobs:
+  - deployment: Deploy_prod
+    displayName: Deploy to production
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'Piggymetrics.prod'
     strategy:
       runOnce:
         deploy:
