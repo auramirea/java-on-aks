@@ -28,6 +28,9 @@ metadata:
     app: notification-service
   name: notification-service
 spec:
+  selector:
+    matchLabels:
+      app: notification-service
   replicas: 1
   strategy:
     type: RollingUpdate
