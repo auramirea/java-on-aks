@@ -28,6 +28,9 @@ metadata:
     app: auth-service
   name: auth-service
 spec:
+  selector:
+    matchLabels:
+      app: auth-service
   replicas: 1
   strategy:
     type: RollingUpdate
