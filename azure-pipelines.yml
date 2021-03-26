@@ -39,7 +39,12 @@ stages:
         azureSubscription: $(azureSubscription)
         KeyVaultName: $(KEYVAULT_NAME)
         SecretsFilter: '*'
-
+    - task: Docker@1
+      displayName: 'Docker: login ACR'
+      inputs:
+        command: login
+        azureSubscriptionEndpoint: $(azureSubscription)
+        azureContainerRegistry: $(CONTAINER_REGISTRY).azurecr.io
     - task: Bash@3
       displayName: Build container images for each service
       inputs:
@@ -50,8 +55,8 @@ stages:
           echo 'Install ACR AAD credential helper and login'
 
           curl -L https://aka.ms/acr/installaad/bash | /bin/bash
-          az acr login -n $(CONTAINER_REGISTRY)
-          docker login -u $(AZURE-REGISTRY-USERNAME) -p $(AZURE-REGISTRY-PASSWORD) $(CONTAINER_REGISTRY).azurecr.io
+          # az acr login -n $(CONTAINER_REGISTRY)
+          # docker login -u $(AZURE-REGISTRY-USERNAME) -p $(AZURE-REGISTRY-PASSWORD) $(CONTAINER_REGISTRY).azurecr.io
 
           echo 'Start Build'
 
